@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>FileReader</title>
+    <script type="text/javascript">
+    if (!window.FileReader) {
+        alert('FileReader not supported by your browser');
+        window.close();
+    }
+
+    function loadImg(fileinput) {
+        var file = fileinput.files[0];
+        if (!/image\/\w+/.test(file.type)) {
+            alert("please pick image!");
+            return false;
+        }
+
+        //Collect image properties
+        var props = {};
+        props.name = file.name;
+        props.size = Math.round(file.size/1024) + ' KB';
+        props.type = file.type;
+
+        var d = document.getElementById('fileProps');
+
+        d.innerHTML =  ['name:' + props.name, 'size:' + props.size, 'type:' + props.type].join('<br/>');
+
+        var fr = new FileReader();
+        fr.readAsDataURL(file);
+
+        /*        fr.addEventListener('load', function(e) {
+                    var localimg = document.getElementById("localimg");
+                    localimg.src = e.target.result;
+                });*/
+
+        fr.onload = function(e) {
+            var localimg = document.getElementById("localimg");
+            localimg.src = e.target.result;
+        }
+
+    }
+
+    function clickFile(){
+        document.getElementById('updatedFile').click();
+    }
+
+    </script>
+</head>
+
+<body>
+    <div>
+        readAsDataURL
+        <button onclick="clickFile()">chose image</button>
+        <input style="display:none;" type="file" id="updatedFile" onchange="loadImg(this)" />
+    </div>
+    <div id="fileProps"></div>
+    <img id="localimg" src="" alt="local file" />
+</body>
+
+</html>
