@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <title>FileReader</title>
+    <title>FileReader Demo</title>
     <script type="text/javascript">
     if (!window.FileReader) {
         alert('FileReader not supported by your browser');
@@ -51,7 +50,6 @@
 
 <body>
     <div>
-        readAsDataURL
         <button onclick="clickFile()">chose image</button>
         <input style="display:none;" type="file" id="updatedFile" onchange="loadImg(this)" />
     </div>

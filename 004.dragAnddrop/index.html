@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>HTML5 demo - Drag and drop</title>
+</head>
+<body>
+
+<div name="image" id="dropbox" style="min-width:300px;min-height:100px;border:3px dashed silver;"></div>
+<button id="submit" style="disabled:true;">submit</button>
+<div id="preview">
+
+</div>
+</body>
+<script type="text/javascript">
+
+var dropbox = document.getElementById('dropbox'),
+    submit = document.getElementById('submit'),
+    preview = document.getElementById('preview');
+
+var handleFiles = function(files) {
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var fr = new FileReader();
+        fr.readAsDataURL(file);
+
+        fr.onload = function(e) {
+            var img = document.createElement("img");
+            img.src = e.target.result;
+            preview.appendChild(img);
+        }
+    }
+}
+
+
+document.addEventListener("dragenter", function(e){
+    dropbox.style.borderColor = 'gray';
+}, false);
+document.addEventListener("dragleave", function(e){
+    dropbox.style.borderColor = 'silver';
+}, false);
+dropbox.addEventListener("dragenter", function(e){
+    dropbox.style.borderColor = 'gray';
+    dropbox.style.backgroundColor = 'white';
+}, false);
+dropbox.addEventListener("dragleave", function(e){
+    dropbox.style.backgroundColor = 'transparent';
+}, false);
+dropbox.addEventListener("dragenter", function(e){
+    e.stopPropagation();
+    e.preventDefault();
+}, false);
+dropbox.addEventListener("dragover", function(e){
+    e.stopPropagation();
+    e.preventDefault();
+}, false);
+dropbox.addEventListener("drop", function(e){
+    e.stopPropagation();
+    e.preventDefault();
+
+    handleFiles(e.dataTransfer.files);
+
+    submit.disabled = false;
+}, false);
+
+</script>
+</html>

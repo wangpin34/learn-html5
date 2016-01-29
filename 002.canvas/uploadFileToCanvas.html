@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="cache-control" content="no-siteapp" />
+    <title>Canvas Demo 2</title>
+</head>
+
+<body>
+
+    <span>使用图像</span><br/>
+    <input type="file" id="upload"/><br/>
+    <canvas id="imgCanvas1"></canvas></br>
+
+    <span>反转图像颜色</span><br/>
+    <canvas id="imgCanvas2"></canvas><br/>
+
+</body>
+<script type="text/javascript">
+
+var imgCanvas1 = document.getElementById('imgCanvas1');
+var imgCanvas1Ctx = imgCanvas1.getContext('2d');
+var imgCanvas2 = document.getElementById('imgCanvas2');
+
+document.getElementById('upload').addEventListener('change',function(e){
+    var file = e.target.files[0];
+    var fr = new FileReader();
+    fr.readAsDataURL(file);
+    fr.onload = function(e) {
+        var img_src = e.target.result;
+        var img1 = new Image();
+        img1.src = img_src;
+        img1.onload = function(){
+            imgCanvas1Ctx.width = img1.width;
+            imgCanvas1Ctx.height = img1.height;
+            imgCanvas1Ctx.drawImage(img1,0,0);
+            invert(imgCanvas2,img1);
+        };
+    }
+});
+
+
+function invert(canvasObj,img){
+    var ctx = canvasObj.getContext('2d');
+    canvasObj.width = img.width;
+    canvasObj.height = img.height;
+    ctx.drawImage(img,0,0);
+    var data = ctx.getImageData(0, 0,img.width,img.height).data
+    var back = ctx.createImageData(img.width,img.height);
+    var arr = back.data;
+
+    for(var i=0,len = data.length;i<len;i+=4){
+        var red = data[i],
+            green = data[i+1],
+            blue = data[i+2],
+            alpha = data[i+3];
+
+        arr[i] = 255-red;
+        arr[i+1] = 255-green;
+        arr[i+2] = 255-blue;
+        arr[i+3] = alpha;
+    }
+    ctx.clearRect(0, 0,img.width,img.height);
+    // console.log(img);
+    ctx.putImageData(back,0,0);
+}
+
+</script>
+
+</html>

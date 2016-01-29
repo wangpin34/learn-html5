@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="cache-control" content="no-siteapp" />
+    <title>Canvas Demo</title>
+</head>
+
+<body>
+    <span>绘制红色矩形</span><br/>
+    <canvas id="myCanvas"></canvas>
+    <br/>
+    <span>绘制文字1</span><br/>
+    <canvas id="textCanvas1"></canvas>
+    <br/>
+    <span>绘制文字2</span><br/>
+    <canvas id="textCanvas2"></canvas>
+    <br/>
+    <span>绘制文字3</span><br/>
+    <canvas id="textCanvas3"></canvas><br/>
+
+    <span>使用图像</span><br/>
+    <canvas id="imgCanvas1"></canvas></br>
+
+    <span>反转图像颜色</span><br/>
+    <canvas id="imgCanvas2"></canvas><br/>
+
+</body>
+<script type="text/javascript">
+//draw red rectangle
+var myCanvas = document.getElementById('myCanvas');
+var ctx = myCanvas.getContext('2d');
+ctx.fillStyle = '#FF0000';
+ctx.fillRect(0, 0, 80, 100);
+
+//draw text
+var textCanvas1 = document.getElementById('textCanvas1');
+var textCanvasCtx1 = textCanvas1.getContext('2d');
+textCanvasCtx1.font = "48px serif"
+textCanvasCtx1.fillText('我是文本',0,50);
+
+var textCanvas2 = document.getElementById('textCanvas2');
+var textCanvasCtx2 = textCanvas2.getContext('2d');
+textCanvasCtx2.font = "48px serif"
+textCanvasCtx2.strokeText('我是文本',0,50);
+
+var textCanvas3 = document.getElementById('textCanvas3');
+var textCanvasCtx3 = textCanvas3.getContext('2d');
+textCanvasCtx3.font = "48px serif"
+var text = textCanvasCtx3.measureText('我是文本',0,50);
+
+var imgCanvas1 = document.getElementById('imgCanvas1');
+var imgCanvas1Ctx = imgCanvas1.getContext('2d');
+//create html5 img element
+imgCanvas1.width = 100;
+imgCanvas1.height = 100;
+var img1 = new Image();
+img1.src = 'luobin.jpg';
+img1.alt = 'alt text';
+img1.style.display = 'none';
+
+//create general image element
+var img2 = document.createElement('img'); // 使用 DOM HTMLImageElement
+img2.src = 'luobin.jpg';
+img2.alt = 'alt text';
+img2.style.display = 'none';
+document.body.appendChild(img1);
+document.body.appendChild(img2);
+img1.onload = function(){
+    imgCanvas1.width = img1.width;
+    imgCanvas1.height = img1.height;
+    imgCanvas1Ctx.drawImage(img1,0,0);
+}
+
+var imgCanvas2 = document.getElementById('imgCanvas2');
+var imgCanvas2Ctx = imgCanvas2.getContext('2d')
+
+img2.onload = function(){
+    imgCanvas2.width = img2.width;
+    imgCanvas2.height = img2.height;
+    imgCanvas2Ctx.drawImage(img2,0,0);
+
+    invert(imgCanvas2Ctx);
+}
+
+
+function invert(canvaxCtx){
+    var data = canvaxCtx.getImageData(0, 0,img2.width,img2.height).data
+    var back = canvaxCtx.createImageData(img2.width,img2.height);
+    var arr = back.data;
+
+    for(var i=0,len = data.length;i<len;i+=4){
+        var red = data[i],
+            green = data[i+1],
+            blue = data[i+2],
+            alpha = data[i+3];
+
+        arr[i] = 255-red;
+        arr[i+1] = 255-green;
+        arr[i+2] = 255-blue;
+        arr[i+3] = alpha;
+    }
+    canvaxCtx.clearRect(0, 0,img2.width,img2.height);
+    // console.log(img);
+    canvaxCtx.putImageData(back,0,0);
+}
+
+
+
+
+
+</script>
+
+</html>
